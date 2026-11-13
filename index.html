@@ -1,0 +1,2670 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#0f766e">
+  <title>Kasir Warung — Sistem Kasir Cepat, Nota Antrean & Kasbon</title>
+  <!-- Google Fonts: Plus Jakarta Sans, JetBrains Mono & Space Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --teal-950: #042f2e;
+      --teal-900: #134e4a;
+      --teal-800: #115e59;
+      --teal-700: #0f766e;
+      --teal-600: #0d9488;
+      --teal-500: #14b8a6;
+      --teal-100: #ccfbf1;
+      --teal-50:  #f0fdfa;
+      --stone-900: #1c1917;
+      --stone-800: #292524;
+      --stone-700: #44403c;
+      --stone-600: #57534e;
+      --stone-500: #78716c;
+      --stone-400: #a8a29e;
+      --stone-300: #d6d3d1;
+      --stone-200: #e7e5e4;
+      --stone-100: #f5f5f4;
+      --stone-50:  #fafaf9;
+      --amber-600: #d97706;
+      --amber-500: #f59e0b;
+      --amber-100: #fef3c7;
+      --amber-900: #78350f;
+      --red-600:   #dc2626;
+      --red-100:   #fee2e2;
+      --green-600: #16a34a;
+      --green-100: #dcfce7;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 26px;
+      --shadow-sm: 0 2px 6px rgba(28, 25, 23, 0.05);
+      --shadow-md: 0 10px 25px -5px rgba(28, 25, 23, 0.08);
+      --shadow-lg: 0 25px 50px -12px rgba(28, 25, 23, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--stone-100);
+      color: var(--stone-800);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* TOPBAR HEADER */
+    .topbar {
+      background: linear-gradient(135deg, var(--teal-800) 0%, var(--teal-700) 100%);
+      color: #ffffff;
+      padding: 10px 18px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 4px 18px rgba(15, 118, 110, 0.25);
+    }
+
+    .topbar-content {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      background: #ffffff;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--teal-700);
+      font-size: 18px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.4px;
+      line-height: 1.1;
+    }
+
+    .brand-sub {
+      font-size: 10.5px;
+      opacity: 0.85;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .topbar-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .clock-pill {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 99px;
+      padding: 5px 11px;
+      font-size: 11.5px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+      70% { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 99px;
+      padding: 6px 13px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-nav:hover { background: rgba(255, 255, 255, 0.25); }
+    .btn-nav:active { transform: scale(0.96); }
+
+    .btn-icon-nav {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.15s;
+    }
+    .btn-icon-nav:hover { background: rgba(255, 255, 255, 0.26); }
+
+    .kasbon-badge-count {
+      background: var(--amber-500);
+      color: var(--stone-900);
+      font-size: 10px;
+      font-weight: 900;
+      padding: 1px 6px;
+      border-radius: 99px;
+    }
+
+    /* QUEUE / OPEN NOTES STRIP */
+    .queue-strip {
+      background: var(--teal-900);
+      padding: 9px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .queue-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .queue-inner::-webkit-scrollbar { display: none; }
+
+    .btn-new-note {
+      background: #ffffff;
+      color: var(--teal-900);
+      border: none;
+      border-radius: 99px;
+      padding: 7px 15px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      flex-shrink: 0;
+      transition: transform 0.15s;
+    }
+    .btn-new-note:active { transform: scale(0.95); }
+
+    .note-chip {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 99px;
+      padding: 6px 13px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex-shrink: 0;
+      transition: all 0.15s;
+    }
+
+    .note-chip.active {
+      background: #ffffff;
+      color: var(--teal-900);
+      border-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .note-chip-timer {
+      font-size: 10.5px;
+      opacity: 0.72;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .trait-badge {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+
+    /* MAIN APP WORKSPACE */
+    .app-main {
+      flex: 1;
+      max-width: 1320px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 400px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    /* MENU SECTION */
+    .menu-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .menu-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .cat-pills {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .cat-pills::-webkit-scrollbar { display: none; }
+
+    .cat-pill {
+      background: #ffffff;
+      border: 1px solid var(--stone-200);
+      color: var(--stone-600);
+      border-radius: 99px;
+      padding: 7px 14px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+      box-shadow: var(--shadow-sm);
+    }
+    .cat-pill:hover { border-color: var(--teal-600); color: var(--teal-700); }
+    .cat-pill.active {
+      background: var(--teal-700);
+      color: #ffffff;
+      border-color: var(--teal-700);
+    }
+
+    .search-box {
+      position: relative;
+      min-width: 220px;
+      flex: 1;
+      max-width: 280px;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid var(--stone-200);
+      border-radius: 99px;
+      padding: 8px 14px 8px 36px;
+      font-size: 13px;
+      outline: none;
+      transition: all 0.2s;
+      box-shadow: var(--shadow-sm);
+    }
+    .search-box input:focus {
+      border-color: var(--teal-600);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.14);
+    }
+    .search-box i {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      color: var(--stone-400);
+    }
+
+    /* MENU GRID WITH REAL FOOD CARDS */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
+      gap: 12px;
+    }
+
+    .menu-card {
+      background: #ffffff;
+      border: 1px solid var(--stone-200);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .menu-card:hover {
+      border-color: var(--teal-600);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .menu-card:active { transform: scale(0.97); }
+
+    .menu-card.in-cart {
+      border-color: var(--teal-600);
+      background: var(--teal-50);
+    }
+
+    .menu-thumb {
+      width: 100%;
+      height: 98px;
+      background: var(--stone-200);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .menu-card:hover .menu-thumb img { transform: scale(1.06); }
+
+    .menu-thumb-fallback {
+      font-size: 32px;
+      color: var(--teal-700);
+      display: none;
+    }
+
+    .menu-cat-tag {
+      position: absolute;
+      bottom: 6px;
+      left: 6px;
+      background: rgba(28, 25, 23, 0.72);
+      backdrop-filter: blur(4px);
+      color: #ffffff;
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .menu-card-body {
+      padding: 10px 11px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 1;
+      gap: 6px;
+    }
+
+    .menu-card-name {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--stone-800);
+      line-height: 1.25;
+    }
+
+    .menu-card-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .menu-card-price {
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--teal-700);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .menu-add-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      background: var(--teal-100);
+      color: var(--teal-800);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .menu-card-badge {
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      background: var(--teal-700);
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 900;
+      min-width: 25px;
+      height: 25px;
+      padding: 0 6px;
+      border-radius: 99px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+      border: 2px solid #ffffff;
+      z-index: 2;
+      animation: pop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.5); }
+      100% { transform: scale(1); }
+    }
+
+    /* RIGHT SIDEBAR: ACTIVE NOTE PANEL */
+    .note-panel {
+      background: #ffffff;
+      border: 1px solid var(--stone-200);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 74px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .mobile-drawer-handle {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--teal-700);
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .note-panel-inner {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .note-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--stone-200);
+      padding-bottom: 10px;
+    }
+
+    .note-id-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--stone-900);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .order-type-pills {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: var(--stone-100);
+      padding: 4px;
+      border-radius: 10px;
+    }
+
+    .btn-order-mode {
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      padding: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--stone-500);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-order-mode.active {
+      background: #ffffff;
+      color: var(--teal-800);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    }
+
+    .btn-icon-subtle {
+      background: var(--stone-100);
+      border: none;
+      color: var(--stone-500);
+      font-size: 14px;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .btn-icon-subtle:hover { color: var(--red-600); background: var(--red-100); }
+
+    /* TRAIT / CIRI WARNA + CATATAN */
+    .trait-selector {
+      background: var(--stone-50);
+      border: 1px solid var(--stone-200);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .trait-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--stone-500);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .trait-dots {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .btn-trait-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+      outline: none;
+    }
+    .btn-trait-dot:hover { transform: scale(1.12); }
+    .btn-trait-dot.active {
+      transform: scale(1.14);
+      border-color: var(--teal-700);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.25);
+    }
+
+    .dot-merah  { background: #EF4444; }
+    .dot-biru   { background: #3B82F6; }
+    .dot-hijau  { background: #10B981; }
+    .dot-kuning { background: #FACC15; }
+    .dot-hitam  { background: #18181B; }
+    .dot-putih  { background: #FFFFFF; border: 1px solid #D4D4D8 !important; }
+
+    .note-customer-input {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid var(--stone-200);
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--stone-800);
+      outline: none;
+    }
+    .note-customer-input:focus { border-color: var(--teal-600); }
+
+    /* CART ITEMS LIST */
+    .cart-items-list {
+      max-height: 245px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      padding-right: 2px;
+    }
+
+    .cart-empty {
+      text-align: center;
+      padding: 26px 12px;
+      color: var(--stone-400);
+      font-size: 13px;
+    }
+    .cart-empty i {
+      font-size: 30px;
+      color: var(--stone-300);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .cart-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 10px;
+      background: var(--stone-50);
+      border-radius: 10px;
+      border: 1px solid var(--stone-200);
+    }
+
+    .cart-row-info { flex: 1; min-width: 0; }
+    .cart-row-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--stone-800);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cart-row-price {
+      font-size: 11px;
+      color: var(--stone-500);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .cart-qty-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-qty {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: #ffffff;
+      border: 1px solid var(--stone-300);
+      color: var(--stone-700);
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.12s;
+    }
+    .btn-qty:hover { border-color: var(--teal-600); color: var(--teal-700); }
+    .btn-qty:active { transform: scale(0.9); }
+
+    .qty-display {
+      font-size: 13.5px;
+      font-weight: 800;
+      min-width: 20px;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .cart-row-total {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--stone-900);
+      min-width: 68px;
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* NOTE SUMMARY & PAY BUTTON */
+    .note-summary {
+      border-top: 1px dashed var(--stone-300);
+      padding-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12.5px;
+      color: var(--stone-600);
+    }
+
+    .summary-line.total {
+      font-size: 15.5px;
+      font-weight: 900;
+      color: var(--stone-900);
+    }
+
+    .total-amount {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--teal-700);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .pay-actions-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+    }
+
+    .btn-pay {
+      background: var(--teal-700);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 13px 16px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(15, 118, 110, 0.35);
+      transition: all 0.15s;
+    }
+    .btn-pay:hover { background: var(--teal-800); transform: translateY(-1px); }
+    .btn-pay:active { transform: scale(0.98); }
+    .btn-pay:disabled { background: var(--stone-300); box-shadow: none; cursor: not-allowed; }
+
+    .btn-kasbon-quick {
+      background: var(--amber-100);
+      color: var(--amber-900);
+      border: 1px solid #fde68a;
+      border-radius: var(--radius-md);
+      padding: 0 14px;
+      font-size: 12.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-kasbon-quick:hover { background: #fde68a; }
+    .btn-kasbon-quick:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* MODAL SYSTEM */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 25, 23, 0.68);
+      backdrop-filter: blur(5px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .modal-backdrop.open { opacity: 1; pointer-events: auto; }
+
+    .modal-window {
+      background: #ffffff;
+      border-radius: var(--radius-xl);
+      max-width: 500px;
+      width: 100%;
+      max-height: 92vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      transform: scale(0.95);
+      transition: transform 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-backdrop.open .modal-window { transform: scale(1); }
+
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--stone-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--stone-50);
+    }
+
+    .modal-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--stone-900);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-close-modal {
+      background: var(--stone-200);
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      color: var(--stone-700);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-body {
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* PAYMENT MODAL */
+    .pay-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      background: var(--stone-100);
+      padding: 4px;
+      border-radius: 12px;
+    }
+
+    .pay-tab-btn {
+      border: none;
+      background: transparent;
+      border-radius: 9px;
+      padding: 9px 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--stone-600);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .pay-tab-btn.active {
+      background: #ffffff;
+      color: var(--teal-800);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .pay-amount-hero {
+      text-align: center;
+      background: linear-gradient(135deg, var(--teal-800) 0%, var(--teal-700) 100%);
+      color: #ffffff;
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+
+    .pay-amount-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      opacity: 0.85;
+    }
+
+    .pay-amount-value {
+      font-size: 36px;
+      font-weight: 900;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.1;
+      margin-top: 4px;
+    }
+
+    .quick-cash-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .btn-cash {
+      background: var(--stone-100);
+      border: 1px solid var(--stone-200);
+      border-radius: var(--radius-sm);
+      padding: 11px 6px;
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--stone-800);
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      transition: all 0.15s;
+    }
+    .btn-cash:hover { background: var(--stone-200); }
+    .btn-cash.active {
+      background: var(--teal-700);
+      color: #ffffff;
+      border-color: var(--teal-700);
+    }
+
+    .change-hero {
+      text-align: center;
+      background: var(--green-100);
+      border: 1px dashed #86efac;
+      border-radius: var(--radius-md);
+      padding: 12px;
+    }
+    .change-hero.is-minus {
+      background: var(--red-100);
+      border-color: #fca5a5;
+    }
+
+    .change-label { font-size: 11.5px; font-weight: 800; color: var(--stone-600); text-transform: uppercase; }
+    .change-value {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--green-600);
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 2px;
+    }
+    .change-value.minus { color: var(--red-600); }
+
+    /* THERMAL 58MM RECEIPT */
+    .receipt-paper-wrap {
+      background: #fffef7;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+      border: 1px solid var(--stone-200);
+      border-radius: 4px;
+      padding: 22px 16px;
+      max-width: 310px;
+      margin: 0 auto;
+      font-family: 'Space Mono', monospace;
+      font-size: 11.5px;
+      color: #1c1917;
+      line-height: 1.45;
+      position: relative;
+    }
+
+    .receipt-paper-wrap::before,
+    .receipt-paper-wrap::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0;
+      height: 6px;
+      background: radial-gradient(circle, transparent, transparent 50%, #fffef7 50%, #fffef7 100%);
+      background-size: 12px 12px;
+    }
+    .receipt-paper-wrap::before { top: -6px; }
+    .receipt-paper-wrap::after { bottom: -6px; }
+
+    .rcp-dash { border-top: 1px dashed #78716c; margin: 9px 0; }
+    .rcp-double { border-top: 2px dashed #292524; margin: 9px 0; }
+    .rcp-line { display: flex; justify-content: space-between; gap: 8px; }
+
+    /* REKAP TABS & STATS */
+    .rekap-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .stat-card {
+      background: var(--stone-50);
+      border: 1px solid var(--stone-200);
+      border-radius: var(--radius-md);
+      padding: 11px 8px;
+      text-align: center;
+    }
+    .stat-label { font-size: 11px; font-weight: 700; color: var(--stone-500); margin-bottom: 3px; }
+    .stat-val { font-size: 15.5px; font-weight: 900; color: var(--stone-900); font-family: 'JetBrains Mono', monospace; }
+
+    .rekap-list {
+      max-height: 250px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .rekap-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      background: var(--stone-50);
+      border: 1px solid var(--stone-200);
+      border-radius: 10px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .rekap-row:hover { border-color: var(--teal-600); }
+
+    /* MENU EDITOR */
+    .menu-edit-row {
+      display: grid;
+      grid-template-columns: 1fr 90px 95px 32px;
+      align-items: center;
+      gap: 6px;
+      padding: 7px;
+      background: var(--stone-50);
+      border-radius: 9px;
+      border: 1px solid var(--stone-200);
+    }
+
+    .input-edit {
+      padding: 7px 9px;
+      border: 1px solid var(--stone-300);
+      border-radius: 7px;
+      font-size: 13px;
+      outline: none;
+      width: 100%;
+    }
+    .input-edit:focus { border-color: var(--teal-600); }
+
+    /* TOAST */
+    .toast-box {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(30px);
+      background: var(--stone-900);
+      color: #ffffff;
+      padding: 10px 20px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease;
+      z-index: 999;
+    }
+    .toast-box.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* PRINT STYLES 58MM */
+    @media print {
+      body * { visibility: hidden; }
+      #printableReceipt, #printableReceipt * { visibility: visible; }
+      #printableReceipt {
+        position: absolute;
+        left: 0; top: 0;
+        width: 58mm;
+        margin: 0; padding: 0;
+        box-shadow: none;
+        border: none;
+        background: #ffffff;
+      }
+      #printableReceipt::before, #printableReceipt::after { display: none; }
+    }
+
+    /* RESPONSIVE MOBILE DRAWER */
+    @media (max-width: 860px) {
+      .clock-pill { display: none; }
+      .app-main { grid-template-columns: 1fr; padding: 12px; }
+      .note-panel {
+        position: fixed;
+        bottom: 0; left: 0; right: 0; top: auto;
+        border-radius: 22px 22px 0 0;
+        box-shadow: 0 -10px 30px rgba(0,0,0,0.22);
+        z-index: 45;
+        max-height: 82vh;
+        overflow-y: auto;
+      }
+      .mobile-drawer-handle { display: flex; }
+      .note-panel.collapsed .note-panel-inner { display: none; }
+      body { padding-bottom: 74px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header class="topbar">
+    <div class="topbar-content">
+      <div class="brand-group" onclick="showModal('modalAkun')">
+        <div class="brand-icon">
+          <i class="fa-solid fa-cash-register"></i>
+        </div>
+        <div>
+          <h1 class="brand-title" id="displayWarungName">Kasir Warung</h1>
+          <div class="brand-sub">
+            <span id="displayKasirLabel">Shift Pagi</span> •
+            <span>Offline-Ready</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="topbar-nav">
+        <div class="clock-pill">
+          <span class="pulse-dot"></span>
+          <span id="liveClock">17:42:00 WIB</span>
+        </div>
+
+        <button class="btn-icon-nav" onclick="toggleAudio()" title="Suara Kasir">
+          <i class="fa-solid fa-volume-high" id="audioIcon"></i>
+        </button>
+
+        <button class="btn-nav" onclick="showModal('modalMenu')">
+          <i class="fa-solid fa-utensils"></i> Menu
+        </button>
+
+        <button class="btn-nav" onclick="showModal('modalRekap')">
+          <i class="fa-solid fa-receipt"></i> Rekap
+          <span class="kasbon-badge-count" id="headerKasbonBadge" style="display:none;">0</span>
+        </button>
+
+        <button class="btn-icon-nav" onclick="showModal('modalAkun')" title="Pengaturan Warung">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- QUEUE / OPEN NOTES STRIP -->
+  <div class="queue-strip">
+    <div class="queue-inner">
+      <button class="btn-new-note" onclick="createNewNote()">
+        <i class="fa-solid fa-plus"></i> Nota baru
+      </button>
+      <div id="notesContainer" style="display:flex; gap:8px; align-items:center;"></div>
+    </div>
+  </div>
+
+  <!-- MAIN WORKSPACE -->
+  <main class="app-main">
+
+    <!-- LEFT: MENU KATALOG -->
+    <section class="menu-panel">
+      <div class="menu-toolbar">
+        <div class="cat-pills" id="catPills">
+          <button class="cat-pill active" onclick="setCategory('semua', this)"><i class="fa-solid fa-border-all"></i> Semua</button>
+          <button class="cat-pill" onclick="setCategory('makanan', this)"><i class="fa-solid fa-bowl-rice"></i> Nasi & Lauk</button>
+          <button class="cat-pill" onclick="setCategory('gorengan', this)"><i class="fa-solid fa-bacon"></i> Gorengan & Ekstra</button>
+          <button class="cat-pill" onclick="setCategory('minuman', this)"><i class="fa-solid fa-mug-hot"></i> Minuman</button>
+        </div>
+
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="inputSearch" placeholder="Cari menu warung..." oninput="renderMenu()">
+        </div>
+      </div>
+
+      <div class="menu-grid" id="menuGrid"></div>
+    </section>
+
+    <!-- RIGHT: ACTIVE NOTE (CART) -->
+    <aside class="note-panel collapsed" id="notePanel">
+      <!-- Mobile sticky summary handle -->
+      <div class="mobile-drawer-handle" onclick="toggleMobileCart()">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <div>
+            <div style="font-size:13.5px; font-weight:800;" id="mobileCartTitle">Nota #1 • 0 porsi</div>
+            <div style="font-size:11px; opacity:0.85;">Ketuk untuk lihat rincian / bayar</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <b class="mono" style="font-size:16px;" id="mobileCartTotal">Rp 0</b>
+          <i class="fa-solid fa-chevron-up" id="mobileChevron"></i>
+        </div>
+      </div>
+
+      <div class="note-panel-inner">
+        <div class="note-header">
+          <div class="note-id-title">
+            <span id="activeNoteNumber">Nota #1</span>
+            <span id="activeNoteTraitDot" class="trait-badge" style="display:none;"></span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span id="activeNoteDuration" class="mono" style="font-size:11px; color:var(--stone-400);">baru</span>
+            <button class="btn-icon-subtle" onclick="askDeleteCurrentNote()" title="Batalkan nota ini">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- ORDER TYPE: MAKAN SINI / BUNGKUS -->
+        <div class="order-type-pills">
+          <button class="btn-order-mode active" id="modeDine" onclick="setOrderMode('Makan Sini')"><i class="fa-solid fa-utensils"></i> Makan Sini</button>
+          <button class="btn-order-mode" id="modeTake" onclick="setOrderMode('Bungkus')"><i class="fa-solid fa-bag-shopping"></i> Bungkus</button>
+        </div>
+
+        <!-- TRAIT / CIRI WARNA PELANGGAN + NAMA -->
+        <div class="trait-selector">
+          <div class="trait-label">
+            <span>Ciri Warna Baju / Meja:</span>
+            <span id="activeTraitName" style="color:var(--teal-700); font-weight:800;">Tanpa Ciri</span>
+          </div>
+          <div class="trait-dots">
+            <button class="btn-trait-dot dot-merah" onclick="setTrait('merah', 'Merah')" title="Merah"></button>
+            <button class="btn-trait-dot dot-biru" onclick="setTrait('biru', 'Biru')" title="Biru"></button>
+            <button class="btn-trait-dot dot-hijau" onclick="setTrait('hijau', 'Hijau')" title="Hijau"></button>
+            <button class="btn-trait-dot dot-kuning" onclick="setTrait('kuning', 'Kuning')" title="Kuning"></button>
+            <button class="btn-trait-dot dot-hitam" onclick="setTrait('hitam', 'Hitam')" title="Hitam"></button>
+            <button class="btn-trait-dot dot-putih" onclick="setTrait('putih', 'Putih')" title="Putih"></button>
+          </div>
+          <input type="text" class="note-customer-input" id="inputCustomerNote" placeholder="Nama / catatan (opsional: cth 'Mas Ojol', 'Meja 3')" oninput="updateCustomerNote()">
+        </div>
+
+        <!-- ITEMS IN CART -->
+        <div class="cart-items-list" id="cartItemsList"></div>
+
+        <!-- SUMMARY & PAY BUTTON -->
+        <div class="note-summary">
+          <div class="summary-line">
+            <span>Total Pesanan</span>
+            <span id="cartTotalItems" style="font-weight:700;">0 porsi</span>
+          </div>
+          <div class="summary-line total">
+            <span>Total Bayar</span>
+            <span class="total-amount" id="cartTotalAmount">Rp 0</span>
+          </div>
+          <div class="pay-actions-row">
+            <button class="btn-pay" id="btnPay" onclick="openPaymentModal('tunai')" disabled>
+              <span>Bayar</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <button class="btn-kasbon-quick" id="btnQuickKasbon" onclick="openPaymentModal('kasbon')" disabled title="Catat sebagai utang / bayar nanti">
+              <i class="fa-solid fa-book"></i> Kasbon
+            </button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- MODAL: PEMBAYARAN MULTI-METODE (TUNAI / QRIS / KASBON) -->
+  <div class="modal-backdrop" id="modalPayment">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title" id="payModalTitle"><i class="fa-solid fa-wallet" style="color:var(--teal-700);"></i> Pembayaran Nota</h3>
+        <button class="btn-close-modal" onclick="closeModal('modalPayment')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="pay-amount-hero">
+          <div class="pay-amount-label">Total Tagihan Warung</div>
+          <div class="pay-amount-value" id="payHeroAmount">Rp 0</div>
+          <div id="payHeroMeta" style="font-size:11.5px; opacity:0.85; margin-top:4px;">Nota #1 • Makan Sini</div>
+        </div>
+
+        <div class="pay-tabs">
+          <button class="pay-tab-btn active" id="tabPayTunai" onclick="switchPayTab('tunai')"><i class="fa-solid fa-money-bill-wave"></i> Tunai</button>
+          <button class="pay-tab-btn" id="tabPayQris" onclick="switchPayTab('qris')"><i class="fa-solid fa-qrcode"></i> QRIS</button>
+          <button class="pay-tab-btn" id="tabPayKasbon" onclick="switchPayTab('kasbon')"><i class="fa-solid fa-book"></i> Kasbon</button>
+        </div>
+
+        <!-- TAB 1: TUNAI -->
+        <div id="secPayTunai" style="display:flex; flex-direction:column; gap:12px;">
+          <div>
+            <label style="font-size:12px; font-weight:700; color:var(--stone-600); margin-bottom:6px; display:block;">Pecahan Uang Diterima:</label>
+            <div class="quick-cash-grid" id="quickCashButtons"></div>
+          </div>
+
+          <div>
+            <label style="font-size:12px; font-weight:700; color:var(--stone-600); margin-bottom:5px; display:block;">Nominal Diterima (Rp):</label>
+            <input type="number" id="inputCashReceived" class="input-edit mono" style="font-size:19px; font-weight:900; padding:10px 12px;" oninput="computeChange()">
+          </div>
+
+          <div class="change-hero" id="changeHeroBox">
+            <div class="change-label">Uang Kembalian:</div>
+            <div class="change-value" id="changeAmount">Rp 0</div>
+          </div>
+        </div>
+
+        <!-- TAB 2: QRIS -->
+        <div id="secPayQris" style="display:none; text-align:center; background:var(--stone-50); border:1px solid var(--stone-200); border-radius:14px; padding:16px;">
+          <div style="font-size:19px; font-weight:900; color:#dc2626; letter-spacing:1.5px; margin-bottom:4px;">QRIS <span style="background:#1c1917; color:#fff; font-size:9px; padding:2px 5px; border-radius:4px; vertical-align:middle;">WARUNG</span></div>
+          <div style="font-size:11.5px; font-weight:700; color:var(--stone-600); margin-bottom:10px;" id="qrisMerchantLabel">Kasir Warung</div>
+          <svg width="160" height="160" viewBox="0 0 160 160" style="background:#fff; padding:8px; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+            <rect width="160" height="160" fill="#fff"/>
+            <rect x="8" y="8" width="38" height="38" fill="#1c1917"/><rect x="14" y="14" width="26" height="26" fill="#fff"/><rect x="20" y="20" width="14" height="14" fill="#1c1917"/>
+            <rect x="114" y="8" width="38" height="38" fill="#1c1917"/><rect x="120" y="14" width="26" height="26" fill="#fff"/><rect x="126" y="20" width="14" height="14" fill="#1c1917"/>
+            <rect x="8" y="114" width="38" height="38" fill="#1c1917"/><rect x="14" y="120" width="26" height="26" fill="#fff"/><rect x="20" y="126" width="14" height="14" fill="#1c1917"/>
+            <g fill="#1c1917">
+              <rect x="60" y="16" width="8" height="8"/><rect x="76" y="16" width="8" height="8"/><rect x="92" y="24" width="8" height="8"/>
+              <rect x="60" y="40" width="8" height="8"/><rect x="84" y="48" width="8" height="8"/><rect x="16" y="64" width="8" height="8"/>
+              <rect x="64" y="64" width="14" height="14"/><rect x="88" y="64" width="8" height="8"/><rect x="124" y="64" width="8" height="8"/>
+              <rect x="64" y="96" width="8" height="8"/><rect x="88" y="106" width="8" height="8"/><rect x="118" y="120" width="8" height="8"/>
+              <circle cx="80" cy="80" r="11" fill="#0f766e"/>
+              <text x="80" y="84" font-size="9" font-weight="900" fill="#fff" text-anchor="middle" font-family="sans-serif">Q</text>
+            </g>
+          </svg>
+          <p style="font-size:11.5px; color:var(--stone-500); margin-top:8px;">Scan lewat Dana, GoPay, OVO, ShopeePay, atau Mobile Banking.</p>
+        </div>
+
+        <!-- TAB 3: KASBON -->
+        <div id="secPayKasbon" style="display:none; flex-direction:column; gap:10px; background:var(--amber-100); border:1px solid #fde68a; border-radius:14px; padding:14px;">
+          <div style="font-size:12.5px; font-weight:800; color:var(--amber-900);"><i class="fa-solid fa-book"></i> Catat ke Buku Kasbon (Bayar Nanti)</div>
+          <div>
+            <label style="font-size:11.5px; font-weight:700; color:var(--amber-900); display:block; margin-bottom:4px;">Nama Pelanggan / Pengambil Kasbon *</label>
+            <input type="text" id="inputKasbonName" class="input-edit" placeholder="Contoh: Pak Joko Bengkel / Bu RT">
+          </div>
+          <div>
+            <label style="font-size:11.5px; font-weight:700; color:var(--amber-900); display:block; margin-bottom:4px;">No. HP / WhatsApp (Opsional)</label>
+            <input type="text" id="inputKasbonPhone" class="input-edit" placeholder="0812xxxx">
+          </div>
+        </div>
+
+        <button class="btn-pay" id="btnFinishPay" onclick="finishPayment()">
+          <i class="fa-solid fa-circle-check"></i> <span id="btnFinishLabel">Selesai, Nota Lunas</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: STRUK THERMAL 58MM -->
+  <div class="modal-backdrop" id="modalReceipt">
+    <div class="modal-window" style="max-width:390px;">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-receipt" style="color:var(--teal-700);"></i> Struk Pembayaran</h3>
+        <button class="btn-close-modal" onclick="closeModal('modalReceipt')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="receipt-paper-wrap" id="printableReceipt">
+          <div style="text-align:center;">
+            <div style="font-size:15px; font-weight:800; letter-spacing:0.5px;" id="rcpWarungTitle">KASIR WARUNG</div>
+            <div style="font-size:10px; color:#57534e;" id="rcpWarungAddr">Warung Makan & Kedai Kopi</div>
+          </div>
+
+          <div class="rcp-dash"></div>
+
+          <div class="rcp-line"><span>No. Nota</span><b id="rcpNumber">KW-001</b></div>
+          <div class="rcp-line"><span>Waktu</span><span id="rcpDate">13/11/26 17:45</span></div>
+          <div class="rcp-line"><span>Tipe</span><span id="rcpMode">Makan Sini</span></div>
+          <div class="rcp-line"><span>Pelanggan</span><span id="rcpCustomer">-</span></div>
+
+          <div class="rcp-dash"></div>
+
+          <div id="rcpItemsList" style="display:flex; flex-direction:column; gap:4px;"></div>
+
+          <div class="rcp-double"></div>
+
+          <div class="rcp-line" style="font-size:13.5px; font-weight:800;">
+            <span>TOTAL:</span>
+            <span id="rcpTotal">Rp 0</span>
+          </div>
+          <div class="rcp-line">
+            <span id="rcpMethodLabel">Bayar (Tunai):</span>
+            <span id="rcpCash">Rp 0</span>
+          </div>
+          <div class="rcp-line" style="font-weight:700;">
+            <span>Kembali:</span>
+            <span id="rcpChange">Rp 0</span>
+          </div>
+
+          <div class="rcp-dash"></div>
+
+          <svg viewBox="0 0 180 30" style="width:100%; height:28px;">
+            <g fill="#1c1917">
+              <rect x="8" y="0" width="3" height="26"/><rect x="14" y="0" width="2" height="26"/><rect x="20" y="0" width="4" height="26"/>
+              <rect x="28" y="0" width="2" height="26"/><rect x="34" y="0" width="5" height="26"/><rect x="43" y="0" width="2" height="26"/>
+              <rect x="50" y="0" width="4" height="26"/><rect x="58" y="0" width="2" height="26"/><rect x="64" y="0" width="6" height="26"/>
+              <rect x="75" y="0" width="2" height="26"/><rect x="82" y="0" width="4" height="26"/><rect x="92" y="0" width="3" height="26"/>
+              <rect x="100" y="0" width="5" height="26"/><rect x="110" y="0" width="2" height="26"/><rect x="118" y="0" width="4" height="26"/>
+              <rect x="128" y="0" width="3" height="26"/><rect x="136" y="0" width="5" height="26"/><rect x="146" y="0" width="2" height="26"/>
+              <rect x="154" y="0" width="4" height="26"/><rect x="164" y="0" width="3" height="26"/>
+            </g>
+          </svg>
+
+          <div style="text-align:center; font-size:9.5px; color:#57534e; margin-top:4px;">
+            <div>MATUR SUWUN • TERIMA KASIH!</div>
+            <div>Silakan mampir kembali</div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button class="btn-pay" onclick="window.print()">
+            <i class="fa-solid fa-print"></i> Cetak Struk (Thermal 58mm)
+          </button>
+          <button class="btn-pay" style="background:#25D366; box-shadow:none;" onclick="sendWhatsAppReceipt()">
+            <i class="fa-brands fa-whatsapp"></i> Kirim Struk via WhatsApp
+          </button>
+          <button class="btn-cash" style="padding:11px;" onclick="closeModal('modalReceipt')">Selesai & Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: MENU & HARGA -->
+  <div class="modal-backdrop" id="modalMenu">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-utensils" style="color:var(--teal-700);"></i> Kelola Menu & Harga</h3>
+        <button class="btn-close-modal" onclick="closeModal('modalMenu')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="background:var(--stone-50); border:1px solid var(--stone-200); border-radius:var(--radius-md); padding:12px;">
+          <h4 style="font-size:13px; font-weight:800; margin-bottom:8px;">+ Tambah Menu Baru</h4>
+          <div style="display:grid; grid-template-columns: 1fr 95px 95px 40px; gap:6px;">
+            <input type="text" id="newMenuName" class="input-edit" placeholder="Nama item...">
+            <select id="newMenuCat" class="input-edit">
+              <option value="makanan">Nasi/Lauk</option>
+              <option value="gorengan">Gorengan</option>
+              <option value="minuman">Minuman</option>
+            </select>
+            <input type="number" id="newMenuPrice" class="input-edit" placeholder="Harga Rp">
+            <button class="btn-pay" style="padding:0; border-radius:8px;" onclick="addNewMenuItem()" title="Tambah"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+
+        <div style="font-size:11.5px; font-weight:800; color:var(--stone-500); text-transform:uppercase;">Daftar Menu Aktif:</div>
+        <div id="menuEditList" style="display:flex; flex-direction:column; gap:7px; max-height:260px; overflow-y:auto;"></div>
+
+        <button class="btn-pay" onclick="saveMenuChanges()">
+          <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan Menu
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: REKAP & BUKU KASBON -->
+  <div class="modal-backdrop" id="modalRekap">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-chart-pie" style="color:var(--teal-700);"></i> Rekap & Buku Kasbon</h3>
+        <button class="btn-close-modal" onclick="closeModal('modalRekap')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="pay-tabs" style="grid-template-columns:1fr 1fr;">
+          <button class="pay-tab-btn active" id="tabRekapSales" onclick="switchRekapTab('sales')"><i class="fa-solid fa-coins"></i> Omzet Hari Ini</button>
+          <button class="pay-tab-btn" id="tabRekapKasbon" onclick="switchRekapTab('kasbon')"><i class="fa-solid fa-book"></i> Buku Kasbon (<span id="tabKasbonCount">0</span>)</button>
+        </div>
+
+        <!-- TAB REKAP PENJUALAN -->
+        <div id="secRekapSales" style="display:flex; flex-direction:column; gap:12px;">
+          <div class="rekap-stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Pemasukan</div>
+              <div class="stat-val" id="rekapRevenue" style="color:var(--teal-700);">Rp 0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Nota Lunas</div>
+              <div class="stat-val" id="rekapCount">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Rata-rata/Nota</div>
+              <div class="stat-val" id="rekapAvg">Rp 0</div>
+            </div>
+          </div>
+
+          <div id="topSellerBox" style="background:var(--teal-50); border:1px solid var(--teal-100); border-radius:10px; padding:10px 12px; font-size:12px; color:var(--teal-900); display:none;">
+            <b>🔥 Menu Terlaris Hari Ini:</b> <span id="topSellerText"></span>
+          </div>
+
+          <div style="font-size:11.5px; font-weight:800; color:var(--stone-500); text-transform:uppercase;">Nota Selesai (Ketuk untuk lihat struk):</div>
+          <div class="rekap-list" id="rekapListContainer"></div>
+
+          <button class="btn-pay" style="background:var(--stone-800); box-shadow:none;" onclick="downloadBackup()">
+            <i class="fa-solid fa-file-arrow-down"></i> Unduh Cadangan (JSON)
+          </button>
+        </div>
+
+        <!-- TAB BUKU KASBON -->
+        <div id="secRekapKasbon" style="display:none; flex-direction:column; gap:12px;">
+          <div style="background:var(--amber-100); border-radius:12px; padding:12px 14px; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:12.5px; font-weight:700; color:var(--amber-900);">Total Piutang Kasbon Aktif:</span>
+            <b class="mono" style="font-size:18px; color:var(--amber-900);" id="totalKasbonAmount">Rp 0</b>
+          </div>
+
+          <div class="rekap-list" id="kasbonListContainer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PENGATURAN WARUNG -->
+  <div class="modal-backdrop" id="modalAkun">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-store" style="color:var(--teal-700);"></i> Pengaturan Warung</h3>
+        <button class="btn-close-modal" onclick="closeModal('modalAkun')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <label style="font-size:12px; font-weight:700; color:var(--stone-600); margin-bottom:4px; display:block;">Nama Warung / Usaha:</label>
+          <input type="text" id="inputWarungName" class="input-edit" style="font-size:14.5px; font-weight:700;" value="Kasir Warung">
+        </div>
+        <div>
+          <label style="font-size:12px; font-weight:700; color:var(--stone-600); margin-bottom:4px; display:block;">Alamat / Sub-judul Struk:</label>
+          <input type="text" id="inputWarungAddr" class="input-edit" value="Warung Makan & Kedai Kopi">
+        </div>
+        <div>
+          <label style="font-size:12px; font-weight:700; color:var(--stone-600); margin-bottom:4px; display:block;">Nama Kasir Bertugas:</label>
+          <input type="text" id="inputKasirName" class="input-edit" value="Shift Pagi">
+        </div>
+
+        <div style="background:var(--stone-50); border:1px solid var(--stone-200); border-radius:var(--radius-md); padding:12px; font-size:12.5px; color:var(--stone-600); line-height:1.5;">
+          <b>✅ Status Offline-First:</b> Semua menu, antrean nota, buku kasbon, dan riwayat transaksi tersimpan aman di memori browser perangkat Anda.
+        </div>
+
+        <div style="display:flex; gap:10px;">
+          <button class="btn-pay" style="flex:1;" onclick="saveWarungSettings()">Simpan Pengaturan</button>
+          <button class="btn-pay" style="flex:1; background:var(--red-600); box-shadow:none;" onclick="askResetData()">Reset Data</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: KONFIRMASI KUSTOM (PENGGANTI confirm()) -->
+  <div class="modal-backdrop" id="modalConfirm">
+    <div class="modal-window" style="max-width:380px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="confirmTitle">Konfirmasi</h3>
+        <button class="btn-close-modal" onclick="closeModal('modalConfirm')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmMessage" style="font-size:13.5px; color:var(--stone-700); line-height:1.5;"></p>
+        <div style="display:flex; gap:10px; margin-top:6px;">
+          <button class="btn-cash" style="flex:1;" onclick="closeModal('modalConfirm')">Batal</button>
+          <button class="btn-pay" style="flex:1; background:var(--red-600); box-shadow:none;" id="confirmOkBtn">Ya, Lanjutkan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast-box" id="toastBox">
+    <i class="fa-solid fa-circle-check" style="color:#4ade80;"></i>
+    <span id="toastMsg">Sukses</span>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // DEFAULT MENU ITEMS WITH CATEGORIES & FOOD IMAGES
+    const DEFAULT_MENU = [
+      { id: "nasi-pecel", name: "Nasi Pecel Madiun", cat: "makanan", price: 10000, img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80" },
+      { id: "nasi-rames", name: "Nasi Rames Telur", cat: "makanan", price: 14000, img: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=400&q=80" },
+      { id: "ayam-goreng", name: "Ayam Goreng Lengkuas", cat: "makanan", price: 12000, img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=400&q=80" },
+      { id: "mie-goreng", name: "Indomie Goreng Telur", cat: "makanan", price: 10000, img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=400&q=80" },
+      { id: "terong", name: "Terong Balado", cat: "makanan", price: 3000, img: "https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=400&q=80" },
+      { id: "telur-dadar", name: "Telur Dadar Krispi", cat: "makanan", price: 4000, img: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=400&q=80" },
+      { id: "telur-asin", name: "Telur Asin Masir", cat: "makanan", price: 4000, img: "https://images.unsplash.com/photo-1587486913049-53fc88980cfc?auto=format&fit=crop&w=400&q=80" },
+      { id: "tahu", name: "Tahu Goreng", cat: "gorengan", price: 1500, img: "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=400&q=80" },
+      { id: "tempe", name: "Tempe Mendoan", cat: "gorengan", price: 1500, img: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=400&q=80" },
+      { id: "peyek", name: "Peyek Kacang", cat: "gorengan", price: 2000, img: "https://images.unsplash.com/photo-1599490659213-e2b9527bd087?auto=format&fit=crop&w=400&q=80" },
+      { id: "kerupuk", name: "Kerupuk Kaleng", cat: "gorengan", price: 1000, img: "https://images.unsplash.com/photo-1621447504864-d8686e12698c?auto=format&fit=crop&w=400&q=80" },
+      { id: "es-teh", name: "Es Teh Manis", cat: "minuman", price: 4000, img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=400&q=80" },
+      { id: "kopi-hitam", name: "Kopi Hitam Tubruk", cat: "minuman", price: 5000, img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=400&q=80" },
+      { id: "es-jeruk", name: "Es Jeruk Peras", cat: "minuman", price: 6000, img: "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=400&q=80" },
+      { id: "air-mineral", name: "Air Mineral Botol", cat: "minuman", price: 3500, img: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=400&q=80" }
+    ];
+
+    const CAT_LABELS = { makanan: "Nasi & Lauk", gorengan: "Gorengan", minuman: "Minuman" };
+
+    // COLOR TRAIT MAP
+    const TRAITS = {
+      merah:  { label: "Merah", color: "#EF4444" },
+      biru:   { label: "Biru", color: "#3B82F6" },
+      hijau:  { label: "Hijau", color: "#10B981" },
+      kuning: { label: "Kuning", color: "#FACC15" },
+      hitam:  { label: "Hitam", color: "#18181B" },
+      putih:  { label: "Putih", color: "#FFFFFF" }
+    };
+
+    // AUDIO SYNTHESIZER (WEB AUDIO API)
+    let audioCtx = null;
+    let isSoundOn = true;
+
+    function playSound(type) {
+      if (!isSoundOn) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'tap') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(540, now);
+          osc.frequency.exponentialRampToValueAtTime(320, now + 0.035);
+          gain.gain.setValueAtTime(0.14, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
+          osc.start(now);
+          osc.stop(now + 0.035);
+        } else if (type === 'cash') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(987.77, now);
+          osc.frequency.setValueAtTime(1318.51, now + 0.08);
+          gain.gain.setValueAtTime(0.24, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === 'del') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.exponentialRampToValueAtTime(90, now + 0.07);
+          gain.gain.setValueAtTime(0.16, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+          osc.start(now);
+          osc.stop(now + 0.07);
+        }
+      } catch (e) {}
+    }
+
+    function toggleAudio() {
+      isSoundOn = !isSoundOn;
+      document.getElementById('audioIcon').className = isSoundOn ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+      if (isSoundOn) playSound('tap');
+      showToast(isSoundOn ? "Suara kasir aktif" : "Suara kasir dimatikan");
+    }
+
+    // STATE
+    let menu = [];
+    let openNotes = [];
+    let activeNoteId = null;
+    let completedNotes = [];
+    let kasbonList = [];
+    let warungName = "Kasir Warung";
+    let warungAddr = "Warung Makan & Kedai Kopi";
+    let kasirName = "Shift Pagi";
+    let nextNoteNum = 1;
+    let activeCategory = "semua";
+    let currentPayTab = "tunai";
+    let lastReceiptRecord = null;
+    let pendingConfirmAction = null;
+
+    // STORAGE KEYS (Backward compatible + enhanced)
+    const KEY_MENU = "kw_menu_v2";
+    const KEY_OLD_MENU = "kw_menu_v1";
+    const KEY_NOTES = "kw_open_notes_v1";
+    const KEY_HISTORY = "kw_history_v1";
+    const KEY_KASBON = "kw_kasbon_v1";
+    const KEY_META = "kw_meta_v1";
+
+    // INIT
+    function init() {
+      // Live clock + queue timer refresh
+      updateClock();
+      setInterval(updateClock, 1000);
+      setInterval(() => { renderQueue(); updateDurationDisplay(); }, 30000);
+
+      // Load Menu (prefer v2, migrate v1 if present)
+      const savedMenu = localStorage.getItem(KEY_MENU);
+      if (savedMenu) {
+        menu = JSON.parse(savedMenu);
+      } else {
+        const oldMenu = localStorage.getItem(KEY_OLD_MENU);
+        if (oldMenu) {
+          const parsed = JSON.parse(oldMenu);
+          menu = parsed.map(oldItem => {
+            const match = DEFAULT_MENU.find(d => d.id === oldItem.id || d.name.toLowerCase() === oldItem.name.toLowerCase());
+            return {
+              id: oldItem.id,
+              name: oldItem.name,
+              price: oldItem.price,
+              cat: match ? match.cat : "makanan",
+              img: match ? match.img : DEFAULT_MENU[0].img
+            };
+          });
+        } else {
+          menu = [...DEFAULT_MENU];
+        }
+      }
+
+      // Load Meta
+      const savedMeta = localStorage.getItem(KEY_META);
+      if (savedMeta) {
+        const meta = JSON.parse(savedMeta);
+        warungName = meta.warungName || "Kasir Warung";
+        warungAddr = meta.warungAddr || "Warung Makan & Kedai Kopi";
+        kasirName = meta.kasirName || "Shift Pagi";
+        nextNoteNum = meta.nextNoteNum || 1;
+      }
+      applyMetaUI();
+
+      // Load History & Kasbon
+      const savedHist = localStorage.getItem(KEY_HISTORY);
+      completedNotes = savedHist ? JSON.parse(savedHist) : [];
+
+      const savedKasbon = localStorage.getItem(KEY_KASBON);
+      kasbonList = savedKasbon ? JSON.parse(savedKasbon) : [];
+      updateKasbonBadge();
+
+      // Load Open Notes
+      const savedNotes = localStorage.getItem(KEY_NOTES);
+      if (savedNotes) {
+        openNotes = JSON.parse(savedNotes);
+        if (openNotes.length > 0) activeNoteId = openNotes[0].id;
+      }
+      if (openNotes.length === 0) createNewNote(false);
+
+      renderMenu();
+      renderQueue();
+      renderActiveNote();
+    }
+
+    function applyMetaUI() {
+      document.getElementById('displayWarungName').innerText = warungName;
+      document.getElementById('displayKasirLabel').innerText = kasirName;
+      document.getElementById('inputWarungName').value = warungName;
+      document.getElementById('inputWarungAddr').value = warungAddr;
+      document.getElementById('inputKasirName').value = kasirName;
+      document.getElementById('qrisMerchantLabel').innerText = warungName;
+    }
+
+    function updateClock() {
+      document.getElementById('liveClock').innerText = new Date().toLocaleTimeString('id-ID') + " WIB";
+    }
+
+    function persist() {
+      localStorage.setItem(KEY_MENU, JSON.stringify(menu));
+      localStorage.setItem(KEY_NOTES, JSON.stringify(openNotes));
+      localStorage.setItem(KEY_HISTORY, JSON.stringify(completedNotes));
+      localStorage.setItem(KEY_KASBON, JSON.stringify(kasbonList));
+      localStorage.setItem(KEY_META, JSON.stringify({ warungName, warungAddr, kasirName, nextNoteNum }));
+      updateKasbonBadge();
+    }
+
+    function updateKasbonBadge() {
+      const badge = document.getElementById('headerKasbonBadge');
+      const tabCount = document.getElementById('tabKasbonCount');
+      tabCount.innerText = kasbonList.length;
+      if (kasbonList.length > 0) {
+        badge.innerText = kasbonList.length;
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
+    }
+
+    function formatRupiah(num) {
+      return "Rp " + Math.round(num || 0).toLocaleString('id-ID');
+    }
+
+    // CATEGORY & MENU RENDER
+    function setCategory(cat, btn) {
+      playSound('tap');
+      activeCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderMenu();
+    }
+
+    function renderMenu() {
+      const grid = document.getElementById('menuGrid');
+      const search = (document.getElementById('inputSearch').value || "").toLowerCase().trim();
+      const currentNote = getCurrentNote();
+      const lines = currentNote ? currentNote.lines : {};
+
+      grid.innerHTML = "";
+      let filtered = menu;
+      if (activeCategory !== "semua") {
+        filtered = filtered.filter(i => (i.cat || "makanan") === activeCategory);
+      }
+      if (search) {
+        filtered = filtered.filter(i => i.name.toLowerCase().includes(search));
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:36px; color:var(--stone-400); font-size:13.5px;">Menu tidak ditemukan.</div>`;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const qty = lines[item.id] || 0;
+        const card = document.createElement('div');
+        card.className = `menu-card ${qty > 0 ? 'in-cart' : ''}`;
+        card.onclick = () => addItemToActiveNote(item.id);
+
+        const badgeHtml = qty > 0 ? `<div class="menu-card-badge">${qty}</div>` : '';
+        const catTag = CAT_LABELS[item.cat] || "Menu";
+
+        card.innerHTML = `
+          ${badgeHtml}
+          <div class="menu-thumb">
+            <img src="${item.img || ''}" alt="${item.name}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <i class="fa-solid fa-bowl-food menu-thumb-fallback"></i>
+            <span class="menu-cat-tag">${catTag}</span>
+          </div>
+          <div class="menu-card-body">
+            <div class="menu-card-name">${item.name}</div>
+            <div class="menu-card-foot">
+              <span class="menu-card-price">${formatRupiah(item.price)}</span>
+              <span class="menu-add-icon"><i class="fa-solid fa-plus"></i></span>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // QUEUE & NOTES MANAGEMENT
+    function createNewNote(shouldRender = true) {
+      if (shouldRender) playSound('tap');
+      const newNote = {
+        id: "note_" + Date.now() + "_" + Math.floor(Math.random() * 100),
+        number: nextNoteNum++,
+        createdAt: Date.now(),
+        trait: null,
+        mode: "Makan Sini",
+        customerNote: "",
+        lines: {}
+      };
+      openNotes.push(newNote);
+      activeNoteId = newNote.id;
+      persist();
+
+      if (shouldRender) {
+        renderQueue();
+        renderActiveNote();
+        renderMenu();
+        showToast(`Nota #${newNote.number} dibuat`);
+      }
+    }
+
+    function getCurrentNote() {
+      return openNotes.find(n => n.id === activeNoteId);
+    }
+
+    function selectNote(noteId) {
+      playSound('tap');
+      activeNoteId = noteId;
+      renderQueue();
+      renderActiveNote();
+      renderMenu();
+    }
+
+    function getElapsedLabel(ts) {
+      const mins = Math.floor((Date.now() - ts) / 60000);
+      return mins > 0 ? `${mins}m` : 'baru';
+    }
+
+    function updateDurationDisplay() {
+      const note = getCurrentNote();
+      const el = document.getElementById('activeNoteDuration');
+      if (note && el) el.innerText = getElapsedLabel(note.createdAt);
+    }
+
+    function renderQueue() {
+      const container = document.getElementById('notesContainer');
+      container.innerHTML = "";
+
+      if (openNotes.length === 0) {
+        container.innerHTML = `<span style="font-size:12px; color:rgba(255,255,255,0.7); font-style:italic;">Belum ada nota terbuka</span>`;
+        return;
+      }
+
+      openNotes.forEach(note => {
+        const chip = document.createElement('button');
+        chip.className = `note-chip ${note.id === activeNoteId ? 'active' : ''}`;
+        chip.onclick = () => selectNote(note.id);
+
+        let traitDotHtml = "";
+        if (note.trait && TRAITS[note.trait]) {
+          traitDotHtml = `<span class="trait-badge" style="background:${TRAITS[note.trait].color};"></span>`;
+        }
+
+        const countItems = Object.values(note.lines).reduce((a, b) => a + b, 0);
+        const labelExtra = note.customerNote ? ` • ${note.customerNote.slice(0, 10)}` : '';
+        chip.innerHTML = `
+          ${traitDotHtml}
+          <span>#${note.number}${labelExtra}</span>
+          ${countItems > 0 ? `<small style="opacity:0.85;">(${countItems})</small>` : ''}
+          <span class="note-chip-timer">${getElapsedLabel(note.createdAt)}</span>
+        `;
+        container.appendChild(chip);
+      });
+    }
+
+    // TRAITS, MODE & CUSTOMER NOTE
+    function setOrderMode(mode) {
+      playSound('tap');
+      const note = getCurrentNote();
+      if (!note) return;
+      note.mode = mode;
+      persist();
+      renderActiveNote();
+    }
+
+    function setTrait(key, label) {
+      playSound('tap');
+      const note = getCurrentNote();
+      if (!note) return;
+      note.trait = (note.trait === key) ? null : key;
+      persist();
+      renderQueue();
+      renderActiveNote();
+    }
+
+    function updateCustomerNote() {
+      const note = getCurrentNote();
+      if (!note) return;
+      note.customerNote = document.getElementById('inputCustomerNote').value;
+      persist();
+      renderQueue();
+    }
+
+    // ADD / REMOVE ITEMS
+    function addItemToActiveNote(itemId) {
+      playSound('tap');
+      let note = getCurrentNote();
+      if (!note) {
+        createNewNote(false);
+        note = getCurrentNote();
+      }
+      note.lines[itemId] = (note.lines[itemId] || 0) + 1;
+      persist();
+      renderActiveNote();
+      renderMenu();
+      renderQueue();
+    }
+
+    function changeItemQty(itemId, delta) {
+      const note = getCurrentNote();
+      if (!note) return;
+
+      const updated = (note.lines[itemId] || 0) + delta;
+      if (updated <= 0) {
+        playSound('del');
+        delete note.lines[itemId];
+      } else {
+        playSound('tap');
+        note.lines[itemId] = updated;
+      }
+
+      persist();
+      renderActiveNote();
+      renderMenu();
+      renderQueue();
+    }
+
+    function askDeleteCurrentNote() {
+      const note = getCurrentNote();
+      if (!note) return;
+      openConfirmModal(
+        "Batalkan Nota?",
+        `Yakin ingin menghapus Nota #${note.number} dari antrean?`,
+        () => {
+          playSound('del');
+          openNotes = openNotes.filter(n => n.id !== note.id);
+          activeNoteId = openNotes.length > 0 ? openNotes[0].id : null;
+          if (!activeNoteId) createNewNote(false);
+          persist();
+          renderQueue();
+          renderActiveNote();
+          renderMenu();
+          showToast("Nota dibatalkan");
+        }
+      );
+    }
+
+    // RENDER CART
+    function renderActiveNote() {
+      const note = getCurrentNote();
+      const numElem = document.getElementById('activeNoteNumber');
+      const dotElem = document.getElementById('activeNoteTraitDot');
+      const listElem = document.getElementById('cartItemsList');
+      const totalAmountElem = document.getElementById('cartTotalAmount');
+      const totalItemsElem = document.getElementById('cartTotalItems');
+      const btnPay = document.getElementById('btnPay');
+      const btnKasbon = document.getElementById('btnQuickKasbon');
+
+      document.querySelectorAll('.btn-trait-dot').forEach(btn => btn.classList.remove('active'));
+
+      if (!note) {
+        numElem.innerText = "Belum Ada Nota";
+        dotElem.style.display = "none";
+        listElem.innerHTML = `<div class="cart-empty"><p>Buat nota baru untuk mulai mencatat pesanan.</p></div>`;
+        totalAmountElem.innerText = formatRupiah(0);
+        totalItemsElem.innerText = "0 porsi";
+        btnPay.disabled = true;
+        btnKasbon.disabled = true;
+        updateMobileSummary(0, 0, "-");
+        return;
+      }
+
+      numElem.innerText = `Nota #${note.number}`;
+      updateDurationDisplay();
+      document.getElementById('inputCustomerNote').value = note.customerNote || "";
+
+      // Mode pills
+      const mode = note.mode || "Makan Sini";
+      document.getElementById('modeDine').classList.toggle('active', mode === 'Makan Sini');
+      document.getElementById('modeTake').classList.toggle('active', mode === 'Bungkus');
+
+      if (note.trait && TRAITS[note.trait]) {
+        dotElem.style.display = "inline-block";
+        dotElem.style.background = TRAITS[note.trait].color;
+        document.getElementById('activeTraitName').innerText = TRAITS[note.trait].label;
+        const activeBtn = document.querySelector(`.dot-${note.trait}`);
+        if (activeBtn) activeBtn.classList.add('active');
+      } else {
+        dotElem.style.display = "none";
+        document.getElementById('activeTraitName').innerText = "Tanpa Ciri";
+      }
+
+      listElem.innerHTML = "";
+      const lineEntries = Object.entries(note.lines);
+
+      if (lineEntries.length === 0) {
+        listElem.innerHTML = `
+          <div class="cart-empty">
+            <i class="fa-solid fa-basket-shopping"></i>
+            <p>Ketuk menu di samping untuk mencatat pesanan ke nota ini.</p>
+          </div>
+        `;
+        totalAmountElem.innerText = formatRupiah(0);
+        totalItemsElem.innerText = "0 porsi";
+        btnPay.disabled = true;
+        btnKasbon.disabled = true;
+        updateMobileSummary(0, 0, `#${note.number}`);
+        return;
+      }
+
+      let grandTotal = 0;
+      let totalQty = 0;
+
+      lineEntries.forEach(([itemId, qty]) => {
+        const item = menu.find(m => m.id === itemId);
+        if (!item) return;
+
+        const subtotal = item.price * qty;
+        grandTotal += subtotal;
+        totalQty += qty;
+
+        const row = document.createElement('div');
+        row.className = "cart-row";
+        row.innerHTML = `
+          <div class="cart-row-info">
+            <div class="cart-row-name">${item.name}</div>
+            <div class="cart-row-price">${formatRupiah(item.price)}</div>
+          </div>
+          <div class="cart-qty-ctrl">
+            <button class="btn-qty" onclick="changeItemQty('${item.id}', -1)">-</button>
+            <span class="qty-display">${qty}</span>
+            <button class="btn-qty" onclick="changeItemQty('${item.id}', 1)">+</button>
+          </div>
+          <div class="cart-row-total">${formatRupiah(subtotal)}</div>
+        `;
+        listElem.appendChild(row);
+      });
+
+      totalAmountElem.innerText = formatRupiah(grandTotal);
+      totalItemsElem.innerText = `${totalQty} porsi`;
+      btnPay.disabled = false;
+      btnKasbon.disabled = false;
+      updateMobileSummary(totalQty, grandTotal, `#${note.number}`);
+    }
+
+    function updateMobileSummary(qty, total, numLabel) {
+      document.getElementById('mobileCartTitle').innerText = `Nota ${numLabel} • ${qty} porsi`;
+      document.getElementById('mobileCartTotal').innerText = formatRupiah(total);
+    }
+
+    function toggleMobileCart() {
+      const panel = document.getElementById('notePanel');
+      panel.classList.toggle('collapsed');
+      const icon = document.getElementById('mobileChevron');
+      icon.className = panel.classList.contains('collapsed') ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down';
+    }
+
+    function getActiveGrandTotal() {
+      const note = getCurrentNote();
+      if (!note) return 0;
+      return Object.entries(note.lines).reduce((sum, [id, qty]) => {
+        const item = menu.find(m => m.id === id);
+        return sum + (item ? item.price * qty : 0);
+      }, 0);
+    }
+
+    // PAYMENT MODAL LOGIC
+    function openPaymentModal(defaultTab = 'tunai') {
+      const total = getActiveGrandTotal();
+      if (total <= 0) return;
+
+      playSound('tap');
+      const note = getCurrentNote();
+      document.getElementById('payModalTitle').innerHTML = `<i class="fa-solid fa-wallet" style="color:var(--teal-700);"></i> Pembayaran Nota #${note.number}`;
+      document.getElementById('payHeroAmount').innerText = formatRupiah(total);
+      const traitText = note.trait ? ` • Baju ${TRAITS[note.trait].label}` : '';
+      document.getElementById('payHeroMeta').innerText = `Nota #${note.number} • ${note.mode || 'Makan Sini'}${traitText}`;
+
+      // Render Quick Cash Buttons
+      const cashContainer = document.getElementById('quickCashButtons');
+      cashContainer.innerHTML = "";
+
+      const denominations = [
+        { label: "Uang Pas", val: total },
+        { label: formatRupiah(Math.ceil(total / 5000) * 5000 || 5000), val: Math.ceil(total / 5000) * 5000 || 5000 },
+        { label: formatRupiah(Math.ceil(total / 10000) * 10000 || 10000), val: Math.ceil(total / 10000) * 10000 || 10000 },
+        { label: "Rp 20.000", val: 20000 },
+        { label: "Rp 50.000", val: 50000 },
+        { label: "Rp 100.000", val: 100000 }
+      ];
+
+      const uniqueDenoms = [];
+      const seen = new Set();
+      denominations.forEach(d => {
+        if (!seen.has(d.val) && d.val >= total) {
+          seen.add(d.val);
+          uniqueDenoms.push(d);
+        }
+      });
+
+      uniqueDenoms.slice(0, 6).forEach((d, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `btn-cash ${idx === 0 ? 'active' : ''}`;
+        btn.innerText = d.label;
+        btn.onclick = () => setCashReceived(d.val, btn);
+        cashContainer.appendChild(btn);
+      });
+
+      document.getElementById('inputCashReceived').value = total;
+      document.getElementById('inputKasbonName').value = note.customerNote || (note.trait ? `Baju ${TRAITS[note.trait].label}` : '');
+      document.getElementById('inputKasbonPhone').value = "";
+
+      switchPayTab(defaultTab);
+      showModal('modalPayment');
+    }
+
+    function switchPayTab(tab) {
+      playSound('tap');
+      currentPayTab = tab;
+      document.getElementById('tabPayTunai').classList.toggle('active', tab === 'tunai');
+      document.getElementById('tabPayQris').classList.toggle('active', tab === 'qris');
+      document.getElementById('tabPayKasbon').classList.toggle('active', tab === 'kasbon');
+
+      document.getElementById('secPayTunai').style.display = tab === 'tunai' ? 'flex' : 'none';
+      document.getElementById('secPayQris').style.display = tab === 'qris' ? 'block' : 'none';
+      document.getElementById('secPayKasbon').style.display = tab === 'kasbon' ? 'flex' : 'none';
+
+      const btnFinish = document.getElementById('btnFinishPay');
+      const label = document.getElementById('btnFinishLabel');
+
+      if (tab === 'tunai') {
+        label.innerText = "Selesai, Nota Lunas";
+        btnFinish.style.background = "var(--teal-700)";
+        computeChange();
+      } else if (tab === 'qris') {
+        label.innerText = "Konfirmasi QRIS Masuk";
+        btnFinish.style.background = "var(--teal-700)";
+        btnFinish.disabled = false;
+      } else {
+        label.innerText = "Simpan ke Buku Kasbon";
+        btnFinish.style.background = "var(--amber-600)";
+        btnFinish.disabled = false;
+      }
+    }
+
+    function setCashReceived(val, btnElem) {
+      playSound('tap');
+      document.getElementById('inputCashReceived').value = val;
+      document.querySelectorAll('#quickCashButtons .btn-cash').forEach(b => b.classList.remove('active'));
+      if (btnElem) btnElem.classList.add('active');
+      computeChange();
+    }
+
+    function computeChange() {
+      if (currentPayTab !== 'tunai') return;
+      const total = getActiveGrandTotal();
+      const cash = parseFloat(document.getElementById('inputCashReceived').value) || 0;
+      const change = cash - total;
+      const changeElem = document.getElementById('changeAmount');
+      const heroBox = document.getElementById('changeHeroBox');
+
+      if (change < 0) {
+        changeElem.className = "change-value minus";
+        heroBox.classList.add('is-minus');
+        changeElem.innerText = `Kurang ${formatRupiah(Math.abs(change))}`;
+        document.getElementById('btnFinishPay').disabled = true;
+      } else {
+        changeElem.className = "change-value";
+        heroBox.classList.remove('is-minus');
+        changeElem.innerText = formatRupiah(change);
+        document.getElementById('btnFinishPay').disabled = false;
+      }
+    }
+
+    function finishPayment() {
+      const note = getCurrentNote();
+      if (!note) return;
+
+      const total = getActiveGrandTotal();
+
+      if (currentPayTab === 'kasbon') {
+        const kName = document.getElementById('inputKasbonName').value.trim();
+        if (!kName) {
+          showToast("Masukkan nama pelanggan untuk kasbon!");
+          return;
+        }
+        const kPhone = document.getElementById('inputKasbonPhone').value.trim();
+        const kasbonRec = {
+          id: "KSB-" + String(note.number).padStart(3, '0') + "-" + Date.now().toString().slice(-3),
+          number: note.number,
+          trait: note.trait,
+          customerName: kName,
+          phone: kPhone,
+          mode: note.mode || "Makan Sini",
+          createdAt: note.createdAt,
+          total: total,
+          items: Object.entries(note.lines).map(([id, qty]) => {
+            const item = menu.find(m => m.id === id);
+            return { name: item ? item.name : id, price: item ? item.price : 0, qty };
+          })
+        };
+        kasbonList.unshift(kasbonRec);
+        playSound('tap');
+        closeOpenNoteAfterSettlement(note.id);
+        closeModal('modalPayment');
+        showToast(`Kasbon atas nama ${kName} dicatat (${formatRupiah(total)})`);
+        return;
+      }
+
+      const cash = currentPayTab === 'tunai' ? (parseFloat(document.getElementById('inputCashReceived').value) || total) : total;
+      const change = Math.max(0, cash - total);
+
+      const record = {
+        id: "KW-" + new Date().toISOString().slice(2, 10).replace(/-/g, '') + "-" + String(note.number).padStart(3, '0'),
+        number: note.number,
+        trait: note.trait,
+        customerNote: note.customerNote || (note.trait ? `Baju ${TRAITS[note.trait].label}` : "Umum"),
+        mode: note.mode || "Makan Sini",
+        method: currentPayTab === 'qris' ? "QRIS" : "Tunai",
+        createdAt: note.createdAt,
+        paidAt: Date.now(),
+        total: total,
+        received: cash,
+        change: change,
+        items: Object.entries(note.lines).map(([id, qty]) => {
+          const item = menu.find(m => m.id === id);
+          return { name: item ? item.name : id, price: item ? item.price : 0, qty };
+        })
+      };
+
+      completedNotes.unshift(record);
+      lastReceiptRecord = record;
+      playSound('cash');
+      closeOpenNoteAfterSettlement(note.id);
+      closeModal('modalPayment');
+
+      openReceiptModal(record);
+    }
+
+    function closeOpenNoteAfterSettlement(noteId) {
+      openNotes = openNotes.filter(n => n.id !== noteId);
+      activeNoteId = openNotes.length > 0 ? openNotes[0].id : null;
+      if (!activeNoteId) createNewNote(false);
+      persist();
+      renderQueue();
+      renderActiveNote();
+      renderMenu();
+    }
+
+    // THERMAL RECEIPT MODAL
+    function openReceiptModal(rec) {
+      lastReceiptRecord = rec;
+      document.getElementById('rcpWarungTitle').innerText = warungName.toUpperCase();
+      document.getElementById('rcpWarungAddr').innerText = warungAddr;
+      document.getElementById('rcpNumber').innerText = rec.id;
+      document.getElementById('rcpDate').innerText = new Date(rec.paidAt).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) + " WIB";
+      document.getElementById('rcpMode').innerText = rec.mode || "Makan Sini";
+      document.getElementById('rcpCustomer').innerText = rec.customerNote || "-";
+
+      const listEl = document.getElementById('rcpItemsList');
+      listEl.innerHTML = "";
+      rec.items.forEach(it => {
+        const line = document.createElement('div');
+        line.className = "rcp-line";
+        line.innerHTML = `<span>${it.qty}x ${it.name}</span><span>${formatRupiah(it.price * it.qty)}</span>`;
+        listEl.appendChild(line);
+      });
+
+      document.getElementById('rcpTotal').innerText = formatRupiah(rec.total);
+      document.getElementById('rcpMethodLabel').innerText = `Bayar (${rec.method || 'Tunai'}):`;
+      document.getElementById('rcpCash').innerText = formatRupiah(rec.received);
+      document.getElementById('rcpChange').innerText = formatRupiah(rec.change);
+
+      showModal('modalReceipt');
+    }
+
+    function sendWhatsAppReceipt() {
+      if (!lastReceiptRecord) return;
+      const r = lastReceiptRecord;
+      let txt = `*${warungName.toUpperCase()}*\n`;
+      txt += `Nota: ${r.id}\nWaktu: ${new Date(r.paidAt).toLocaleString('id-ID')}\n`;
+      txt += `Pelanggan: ${r.customerNote || '-'} (${r.mode || 'Makan Sini'})\n--------------------\n`;
+      r.items.forEach(it => {
+        txt += `${it.qty}x ${it.name} = ${formatRupiah(it.price * it.qty)}\n`;
+      });
+      txt += `--------------------\n`;
+      txt += `*TOTAL: ${formatRupiah(r.total)}*\n`;
+      txt += `Bayar (${r.method || 'Tunai'}): ${formatRupiah(r.received)}\n`;
+      txt += `Kembali: ${formatRupiah(r.change)}\n`;
+      txt += `--------------------\nTerima kasih telah berkunjung! 🙏`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, '_blank');
+    }
+
+    // REKAP & KASBON MODAL
+    function switchRekapTab(t) {
+      playSound('tap');
+      document.getElementById('tabRekapSales').classList.toggle('active', t === 'sales');
+      document.getElementById('tabRekapKasbon').classList.toggle('active', t === 'kasbon');
+      document.getElementById('secRekapSales').style.display = t === 'sales' ? 'flex' : 'none';
+      document.getElementById('secRekapKasbon').style.display = t === 'kasbon' ? 'flex' : 'none';
+      if (t === 'kasbon') renderKasbonList();
+    }
+
+    function renderRekap() {
+      const today = new Date().toDateString();
+      const todayRecords = completedNotes.filter(r => new Date(r.paidAt).toDateString() === today);
+
+      const totalRev = todayRecords.reduce((acc, r) => acc + r.total, 0);
+      const count = todayRecords.length;
+      const avg = count > 0 ? Math.round(totalRev / count) : 0;
+
+      document.getElementById('rekapRevenue').innerText = formatRupiah(totalRev);
+      document.getElementById('rekapCount').innerText = `${count} nota`;
+      document.getElementById('rekapAvg').innerText = formatRupiah(avg);
+
+      // Compute Top Seller
+      const itemCounts = {};
+      todayRecords.forEach(r => r.items.forEach(it => {
+        itemCounts[it.name] = (itemCounts[it.name] || 0) + it.qty;
+      }));
+      const topEntry = Object.entries(itemCounts).sort((a, b) => b[1] - a[1])[0];
+      const topBox = document.getElementById('topSellerBox');
+      if (topEntry) {
+        topBox.style.display = 'block';
+        document.getElementById('topSellerText').innerText = `${topEntry[0]} (${topEntry[1]} porsi terjual)`;
+      } else {
+        topBox.style.display = 'none';
+      }
+
+      const container = document.getElementById('rekapListContainer');
+      container.innerHTML = "";
+      if (todayRecords.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding:20px; color:var(--stone-400); font-size:13px;">Belum ada nota lunas hari ini.</div>`;
+        return;
+      }
+
+      todayRecords.forEach(r => {
+        const timeStr = new Date(r.paidAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        const row = document.createElement('div');
+        row.className = "rekap-row";
+        row.onclick = () => { closeModal('modalRekap'); openReceiptModal(r); };
+
+        let traitDot = "";
+        if (r.trait && TRAITS[r.trait]) {
+          traitDot = `<span style="width:10px; height:10px; border-radius:50%; background:${TRAITS[r.trait].color}; display:inline-block; margin-right:5px;"></span>`;
+        }
+
+        row.innerHTML = `
+          <div>
+            <div style="font-weight:800;">${traitDot}${r.id} (${r.customerNote || 'Umum'})</div>
+            <div style="font-size:11px; color:var(--stone-500);">${timeStr} • ${r.method || 'Tunai'} • ${r.items.length} jenis</div>
+          </div>
+          <div style="font-weight:900; font-family:'JetBrains Mono', monospace; color:var(--teal-700);">
+            ${formatRupiah(r.total)}
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function renderKasbonList() {
+      const totalDebt = kasbonList.reduce((s, k) => s + k.total, 0);
+      document.getElementById('totalKasbonAmount').innerText = formatRupiah(totalDebt);
+
+      const box = document.getElementById('kasbonListContainer');
+      box.innerHTML = "";
+      if (kasbonList.length === 0) {
+        box.innerHTML = `<div style="text-align:center; padding:24px; color:var(--stone-400); font-size:13px;">Tidak ada catatan kasbon aktif.</div>`;
+        return;
+      }
+
+      kasbonList.forEach((k, idx) => {
+        const timeStr = new Date(k.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+        const row = document.createElement('div');
+        row.className = "rekap-row";
+        row.style.cursor = "default";
+        row.innerHTML = `
+          <div>
+            <div style="font-weight:800;">${k.customerName} <small style="color:var(--stone-400);">(${k.id})</small></div>
+            <div style="font-size:11px; color:var(--stone-500);">${timeStr} ${k.phone ? '• ' + k.phone : ''}</div>
+            <div class="mono" style="font-size:13.5px; font-weight:900; color:var(--amber-600); margin-top:2px;">${formatRupiah(k.total)}</div>
+          </div>
+          <button class="btn-pay" style="padding:7px 12px; font-size:12px; border-radius:8px; box-shadow:none;" onclick="settleKasbon(${idx})">
+            <i class="fa-solid fa-check"></i> Lunasi
+          </button>
+        `;
+        box.appendChild(row);
+      });
+    }
+
+    function settleKasbon(idx) {
+      const k = kasbonList[idx];
+      if (!k) return;
+      playSound('cash');
+
+      const record = {
+        id: "LNS-" + k.id,
+        number: k.number,
+        trait: k.trait,
+        customerNote: k.customerName + " (Pelunasan Kasbon)",
+        mode: k.mode,
+        method: "Tunai",
+        createdAt: k.createdAt,
+        paidAt: Date.now(),
+        total: k.total,
+        received: k.total,
+        change: 0,
+        items: k.items
+      };
+      completedNotes.unshift(record);
+      kasbonList.splice(idx, 1);
+      persist();
+      renderKasbonList();
+      renderRekap();
+      showToast(`Kasbon ${k.customerName} dilunasi!`);
+    }
+
+    function downloadBackup() {
+      const data = {
+        app: "kasir-warung",
+        warung: warungName,
+        exportedAt: new Date().toISOString(),
+        menu: menu,
+        completedNotes: completedNotes,
+        kasbonList: kasbonList
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `kasir-warung-cadangan-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      showToast("Cadangan JSON berhasil diunduh");
+    }
+
+    // MENU EDITOR
+    function renderMenuEditor() {
+      const list = document.getElementById('menuEditList');
+      list.innerHTML = "";
+      menu.forEach((item, idx) => {
+        const row = document.createElement('div');
+        row.className = "menu-edit-row";
+        row.innerHTML = `
+          <input type="text" class="input-edit" value="${item.name}" id="editName_${idx}">
+          <select class="input-edit" id="editCat_${idx}">
+            <option value="makanan" ${item.cat === 'makanan' ? 'selected' : ''}>Nasi/Lauk</option>
+            <option value="gorengan" ${item.cat === 'gorengan' ? 'selected' : ''}>Gorengan</option>
+            <option value="minuman" ${item.cat === 'minuman' ? 'selected' : ''}>Minuman</option>
+          </select>
+          <input type="number" class="input-edit mono" value="${item.price}" id="editPrice_${idx}">
+          <button class="btn-icon-subtle" onclick="deleteMenuItem(${idx})" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function addNewMenuItem() {
+      const nameInput = document.getElementById('newMenuName');
+      const catInput = document.getElementById('newMenuCat');
+      const priceInput = document.getElementById('newMenuPrice');
+
+      const name = nameInput.value.trim();
+      const cat = catInput.value;
+      const price = parseFloat(priceInput.value) || 0;
+
+      if (!name || price <= 0) {
+        showToast("Nama dan harga harus valid!");
+        return;
+      }
+
+      const fallbackImg = cat === 'minuman'
+        ? DEFAULT_MENU.find(m => m.cat === 'minuman').img
+        : (cat === 'gorengan' ? DEFAULT_MENU.find(m => m.cat === 'gorengan').img : DEFAULT_MENU[0].img);
+
+      menu.unshift({
+        id: "item_" + Date.now(),
+        name: name,
+        cat: cat,
+        price: price,
+        img: fallbackImg
+      });
+
+      nameInput.value = "";
+      priceInput.value = "";
+      playSound('tap');
+      renderMenuEditor();
+      showToast(`Menu ${name} ditambahkan`);
+    }
+
+    function deleteMenuItem(idx) {
+      playSound('del');
+      menu.splice(idx, 1);
+      renderMenuEditor();
+    }
+
+    function saveMenuChanges() {
+      menu.forEach((item, idx) => {
+        const nameVal = document.getElementById(`editName_${idx}`)?.value.trim();
+        const catVal = document.getElementById(`editCat_${idx}`)?.value;
+        const priceVal = parseFloat(document.getElementById(`editPrice_${idx}`)?.value);
+        if (nameVal) item.name = nameVal;
+        if (catVal) item.cat = catVal;
+        if (!isNaN(priceVal) && priceVal > 0) item.price = priceVal;
+      });
+      persist();
+      renderMenu();
+      renderActiveNote();
+      closeModal('modalMenu');
+      playSound('tap');
+      showToast("Daftar menu berhasil disimpan!");
+    }
+
+    // SETTINGS & CONFIRM MODAL
+    function saveWarungSettings() {
+      warungName = document.getElementById('inputWarungName').value.trim() || "Kasir Warung";
+      warungAddr = document.getElementById('inputWarungAddr').value.trim() || "Warung Makan & Kedai Kopi";
+      kasirName = document.getElementById('inputKasirName').value.trim() || "Shift Pagi";
+      applyMetaUI();
+      persist();
+      closeModal('modalAkun');
+      playSound('tap');
+      showToast("Pengaturan warung disimpan");
+    }
+
+    function askResetData() {
+      openConfirmModal(
+        "Reset Semua Data?",
+        "Semua riwayat transaksi, nota terbuka, buku kasbon, dan menu kustom akan dikembalikan ke awal.",
+        () => {
+          localStorage.removeItem(KEY_MENU);
+          localStorage.removeItem(KEY_NOTES);
+          localStorage.removeItem(KEY_HISTORY);
+          localStorage.removeItem(KEY_KASBON);
+          localStorage.removeItem(KEY_META);
+          menu = [...DEFAULT_MENU];
+          openNotes = [];
+          completedNotes = [];
+          kasbonList = [];
+          nextNoteNum = 1;
+          warungName = "Kasir Warung";
+          warungAddr = "Warung Makan & Kedai Kopi";
+          kasirName = "Shift Pagi";
+          closeModal('modalAkun');
+          init();
+          showToast("Semua data berhasil direset");
+        }
+      );
+    }
+
+    function openConfirmModal(title, msg, onConfirm) {
+      document.getElementById('confirmTitle').innerText = title;
+      document.getElementById('confirmMessage').innerText = msg;
+      pendingConfirmAction = onConfirm;
+      document.getElementById('confirmOkBtn').onclick = () => {
+        closeModal('modalConfirm');
+        if (pendingConfirmAction) pendingConfirmAction();
+      };
+      showModal('modalConfirm');
+    }
+
+    // MODAL & TOAST HELPERS
+    function showModal(id) {
+      if (id === 'modalRekap') {
+        switchRekapTab('sales');
+        renderRekap();
+      }
+      if (id === 'modalMenu') renderMenuEditor();
+      document.getElementById(id).classList.add('open');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    function showToast(msg) {
+      const box = document.getElementById('toastBox');
+      document.getElementById('toastMsg').innerText = msg;
+      box.classList.add('show');
+      setTimeout(() => box.classList.remove('show'), 2400);
+    }
+
+    // START
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
